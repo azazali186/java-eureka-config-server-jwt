@@ -1,0 +1,30 @@
+server:
+  port: 8101
+  servlet:
+    context-path: /v1/auth-service/
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sdk_auth_service
+    username: janny
+    password: Aj189628@
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type: TRACE
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0

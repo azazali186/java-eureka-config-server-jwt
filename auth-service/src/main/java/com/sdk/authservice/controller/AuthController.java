@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth-service/auth")
 public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
@@ -43,7 +43,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> loginHandler(@RequestBody LoginRequest req) {
         ApiResponse response = authService.loginHandler(req, "MEMBERS");
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
@@ -51,7 +51,7 @@ public class AuthController {
     @PostMapping("/driver/login")
     public ResponseEntity<ApiResponse> driverLoginHandler(@RequestBody LoginRequest req) {
         ApiResponse response = authService.loginHandler(req, "DRIVER");
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }

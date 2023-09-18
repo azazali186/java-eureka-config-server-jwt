@@ -1,5 +1,8 @@
 package com.sdk.authservice.response;
 
+import java.util.HashMap;
+import java.util.List;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +21,14 @@ public class ApiResponse<Object> {
         this.data = data;
     }
 
+    public ApiResponse(int status, String message, List data) {
+        this.status = status;
+        this.message = message;
+        HashMap dataObj = new HashMap<>();
+        dataObj.put("data", data);
+        this.data = (Object) dataObj;
+    }
+
     public ApiResponse(int status) {
         this.status = status;
     }
@@ -26,7 +37,5 @@ public class ApiResponse<Object> {
         this.status = status;
         this.message = message;
     }
-
-    
 }
 

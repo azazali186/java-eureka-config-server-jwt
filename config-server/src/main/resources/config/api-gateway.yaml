@@ -1,13 +1,6 @@
 server:
   port: 9099
 
-# spring:
-#   main:
-#     web-application-type: reactive
-#   cloud:  # Use Eureka's native load balancing mechanism
-#     discovery:
-#       enabled: true
-
 eureka:
   client:
     service-url:

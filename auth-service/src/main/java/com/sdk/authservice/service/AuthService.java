@@ -49,28 +49,28 @@ public class AuthService  implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public ApiResponse registerHandler(RegisterRequest req) throws UserAlreadyExistsException{
+    public ApiResponse registerHandler(RegisterRequest req, String roleName) throws UserAlreadyExistsException{
         if (req.getEmail() == null || req.getUsername() == null || req.getPassword() == null) {
             throw new MissingFieldException("Email, Username, and Password are required fields.");
         }
 
-        Optional<UserEntity> existingUser = authRepo.findByEmail(req.getEmail());
+        Optional<UserEntity> existingUser = authRepo.findByEmailAndRoleIdName(req.getEmail(), roleName);
 
         if (existingUser.isPresent()) {
             throw new UserAlreadyExistsException("User with the same email already exists.");
         }
 
-        Optional<RoleEntity> existRole = roleRepo.findByName("MEMBER");
+        Optional<RoleEntity> existRole = roleRepo.findByName(roleName);
 
         RoleEntity role = new RoleEntity();
 
         if (existRole.isPresent()) {
             role = existRole.get();
-        }else {
-            role.setName("MEMBER");
-            role.setDesc("MEMBER ROLE");
+        } else {
+            role.setName(roleName);
+            role.setDesc(roleName+" ROLE");
             roleRepo.save(role);
-            role = roleRepo.findByName("MEMBER").get();
+            role = roleRepo.findByName(roleName).get();
             
         }
 
@@ -98,15 +98,17 @@ public class AuthService  implements UserDetailsService {
         return passwordEncoder.encode(plainTextPassword);
     }
 
-    public ApiResponse loginHandler(LoginRequest req) throws UserNotFoundException, InvalidCredentialsException {
-        Optional<UserEntity> optionalUserEntity = authRepo.findByEmail(req.getEmail());
+    public ApiResponse loginHandler(LoginRequest req, String roleName) throws UserNotFoundException, InvalidCredentialsException {
+        Optional<UserEntity> optionalUserEntity = authRepo.findByEmailAndRoleIdName(req.getEmail(), roleName);
     
+        UserEntity userEntity = optionalUserEntity.get();
+
         // If user not found, throw exception
         if (!optionalUserEntity.isPresent()) {
             throw new UserNotFoundException("User not found with email: " + req.getEmail());
         }
     
-        UserEntity userEntity = optionalUserEntity.get();
+        
     
         // Assuming you have a utility method to check the password
         if (!isPasswordValid(req.getPassword(), userEntity.getPassword())) {

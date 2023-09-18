@@ -1,12 +1,10 @@
 server:
   port: 8101
-  servlet:
-    context-path: /auth/
 
 spring:
-#  main:
+  main:
+   allow-bean-definition-overriding: true
 #    web-application-type: reactive
-#    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5432/sdk_auth_service
     username: janny

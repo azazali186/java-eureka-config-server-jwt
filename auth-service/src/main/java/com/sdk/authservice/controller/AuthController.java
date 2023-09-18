@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/auth")
 public class AuthController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
@@ -26,7 +26,15 @@ public class AuthController {
 
     @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ApiResponse> registerHandler(@RequestBody RegisterRequest req) {
-        ApiResponse response = authService.registerHandler(req);
+        ApiResponse response = authService.registerHandler(req, "MEMBERS");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    @PostMapping(value = "/driver/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse> driverDegisterHandler(@RequestBody RegisterRequest req) {
+        ApiResponse response = authService.registerHandler(req, "DRIVER");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
@@ -34,7 +42,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> loginHandler(@RequestBody LoginRequest req) {
-        ApiResponse response = authService.loginHandler(req);
+        ApiResponse response = authService.loginHandler(req, "MEMBERS");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
+    @PostMapping("/driver/login")
+    public ResponseEntity<ApiResponse> driverLoginHandler(@RequestBody LoginRequest req) {
+        ApiResponse response = authService.loginHandler(req, "DRIVER");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);

@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface AuthRepo  extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findByEmailAndRoleIdName(String email, String roleName);
+    
+
 }

@@ -1,0 +1,23 @@
+server:
+  port: 9090
+
+# spring:
+#   main:
+#     web-application-type: reactive
+#   cloud:  # Use Eureka's native load balancing mechanism
+#     discovery:
+#       enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8145/eureka/  # Eureka server location
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Expose all actuator endpoints, be cautious with this in production
+  tracing:
+    sampling:
+      probability: 1.0  # Setting tracing sampling to 100%

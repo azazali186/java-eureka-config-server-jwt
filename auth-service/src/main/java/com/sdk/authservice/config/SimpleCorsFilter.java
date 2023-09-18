@@ -1,4 +1,4 @@
-package com.sdk.authservice.config;
+/* package com.sdk.authservice.config;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,3 +45,4 @@ public class SimpleCorsFilter implements Filter {
     public void destroy() {
     }
 }
+ */

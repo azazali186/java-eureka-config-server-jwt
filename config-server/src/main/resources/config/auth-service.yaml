@@ -1,14 +1,21 @@
 server:
   port: 8101
   servlet:
-    context-path: /v1/auth-service/
+    context-path: /auth/
 
 spring:
+#  main:
+#    web-application-type: reactive
+#    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5432/sdk_auth_service
     username: janny
     password: Aj189628@
     driver-class-name: org.postgresql.Driver
+
+  # cloud: 
+  #   discovery:
+  #     enabled: true
 
   jpa:
     properties:
@@ -23,6 +30,15 @@ logging:
       hibernate:
         SQL: DEBUG
         type: TRACE
+  
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8145/eureka/
+  
+
 
 management:
   tracing:

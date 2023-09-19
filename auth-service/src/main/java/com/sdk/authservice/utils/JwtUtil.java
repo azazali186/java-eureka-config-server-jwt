@@ -10,17 +10,23 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "B84ED6CB1A10B57C0BF260811A2D1A903418EB9B09E9F03882B72562938D58F1"; // Choose a strong secret key
-    private static final long EXPIRATION_TIME = 1000*60*30; // 1 day in milliseconds
+    private static final String SECRET_KEY = "B84ED6CB1A10B57C0BF260811A2D1A903418EB9B09E9F03882B72562938D58F1"; 
+    private static final long EXPIRATION_TIME = 1000*60*30;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public UUID extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return UUID.fromString((String) claims.get("id"));
     }
 
     public Date extractExpiration(String token) {
@@ -50,8 +56,9 @@ public class JwtUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String generateToken(String userName){
+    public String generateToken(String userName, UUID id){
         Map<String,Object> claims=new HashMap<>();
+        claims.put("id", id.toString()); 
         return createToken(claims,userName);
     }
 
@@ -60,7 +67,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

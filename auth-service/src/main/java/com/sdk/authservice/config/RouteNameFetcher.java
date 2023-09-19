@@ -1,5 +1,7 @@
 package com.sdk.authservice.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,8 @@ import java.util.Optional;
 @Component
 public class RouteNameFetcher {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RouteNameFetcher.class);
+
     @Autowired
     PermissionRepo permRepo;
 
@@ -42,9 +46,8 @@ public class RouteNameFetcher {
         for (RequestMappingInfo requestMappingInfo : handlerMethods.keySet()) {
             String name = requestMappingInfo.getName();
             String route = "";
-            if (!requestMappingInfo.getDirectPaths().isEmpty()) {
-                route = requestMappingInfo.getDirectPaths().toString().replace("[", "").replace("]", "").replaceAll("/",
-                                "-");
+            if (!requestMappingInfo.getPatternValues().isEmpty()) {
+                route = requestMappingInfo.getPatternValues().toString().replace("[", "").replace("]", "");
             }
             if (name != null) {
                 PermissionEntity permissions = permRepo.findByName(name);
@@ -61,16 +64,21 @@ public class RouteNameFetcher {
 
         }
 
-        Optional<RoleEntity> optionalRole = roleRepo.findByName("admin");
+        Optional<RoleEntity> optionalRole = roleRepo.findByName("ADMIN");
         RoleEntity adminRole;
         if (optionalRole.isPresent()) {
             adminRole = optionalRole.get();
         } else {
             adminRole = new RoleEntity();
             adminRole.setName("ADMIN");
-            adminRole.setDesc("Admin role");  // Set a description if needed
+            adminRole.setDesc("Admin role"); // Set a description if needed
         }
-       adminRole.setPermissions(allPermissions);
+        roleRepo.save(adminRole);
+
+        if (!allPermissions.isEmpty()) {
+            adminRole.setPermissions(allPermissions);
+        }
+
         roleRepo.save(adminRole);
     }
 }

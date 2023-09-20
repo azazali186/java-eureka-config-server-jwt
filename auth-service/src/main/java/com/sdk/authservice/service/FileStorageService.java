@@ -13,7 +13,6 @@ import java.util.UUID;
 @Service
 public class FileStorageService {
 
-    // Assuming the uploads directory is in the project root
     private final String storageLocation = "uploads";
 
     public String storeFile(UUID userId, MultipartFile file) {
@@ -31,9 +30,9 @@ public class FileStorageService {
                 Files.createDirectories(storageDirectory);
             }
 
-            // Define the target directory: user_id_current_timestamp
             String fileName =+ System.currentTimeMillis() + "-" + file.getOriginalFilename();
-
+            
+            // Define the target directory: user_id
             String uniqueDirName = userId.toString();
             Path userDirectory = storageDirectory.resolve(uniqueDirName);
             Files.createDirectories(userDirectory); // Create the unique user directory
@@ -47,7 +46,5 @@ public class FileStorageService {
             throw new RuntimeException("Error occurred while storing the file.", ex);
         }
     }
-
-    // You can add more methods if necessary, like delete, list files, etc.
 }
 

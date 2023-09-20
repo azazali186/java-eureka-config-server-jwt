@@ -54,11 +54,6 @@ public class DocumentController {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        /* if (!"DRIVER".equals(user.getRoleId().getName())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Only drivers can upload KYC documents");
-        } */
-
         // Store the file and get its URL
         String documentUrl = fileStorageService.storeFile(id, file);
 

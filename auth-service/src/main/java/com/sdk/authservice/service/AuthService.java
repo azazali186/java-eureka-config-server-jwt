@@ -28,6 +28,7 @@ import com.sdk.authservice.exception.MissingFieldException;
 import com.sdk.authservice.exception.UserAlreadyExistsException;
 import com.sdk.authservice.exception.UserNotFoundException;
 import com.sdk.authservice.repository.AuthRepo;
+import com.sdk.authservice.repository.PermissionRepo;
 import com.sdk.authservice.repository.RoleRepo;
 import com.sdk.authservice.request.LoginRequest;
 import com.sdk.authservice.request.RegisterRequest;
@@ -36,8 +37,7 @@ import com.sdk.authservice.utils.JwtUtil;
 
 @Service
 public class AuthService implements UserDetailsService {
-
-    // @Autowired User users;
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
@@ -45,6 +45,9 @@ public class AuthService implements UserDetailsService {
 
     @Autowired
     private RoleRepo roleRepo;
+
+    @Autowired
+    private PermissionRepo permRepo;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -123,18 +126,16 @@ public class AuthService implements UserDetailsService {
         }
         UserEntity userEntity = optionalUserEntity.get();
 
-        // Assuming you have a utility method to check the password
         if (!isPasswordValid(req.getPassword(), userEntity.getPassword())) {
             throw new InvalidCredentialsException("Invalid password");
         }
-
-        // For security reasons, you may want to remove or nullify sensitive data
-        // like the password hash before sending the user object in the response
         userEntity.setPassword(null);
 
         String jwtToken = JwtUtil.getInstance().generateToken(userEntity.getEmail(), userEntity.getId());
 
-        UserWithToken userWithToken = new UserWithToken(userEntity, jwtToken);
+        List<PermissionEntity> permissions = permRepo.findAll();
+
+        UserWithToken userWithToken = new UserWithToken(userEntity, jwtToken, permissions);
 
         ApiResponse<UserWithToken> response = new ApiResponse<>(
                 HttpStatus.OK.value(),
@@ -161,6 +162,8 @@ public class AuthService implements UserDetailsService {
     public ApiResponse getUserById(UUID id) {
 
         UserEntity user = findById(id);
+
+        user.setPassword(null);
 
         ApiResponse<UserEntity> response = new ApiResponse<>(
                 HttpStatus.OK.value(),

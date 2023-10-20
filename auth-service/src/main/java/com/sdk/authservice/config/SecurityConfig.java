@@ -48,7 +48,7 @@ public class SecurityConfig {
 
         registry
                 .requestMatchers("/auth-service/**").authenticated()
-                .anyRequest().denyAll() // deny all other requests that don't match the above patterns
+                .anyRequest().permitAll() // deny all other requests that don't match the above patterns
                 .and()
                 .sessionManagement(management -> management
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

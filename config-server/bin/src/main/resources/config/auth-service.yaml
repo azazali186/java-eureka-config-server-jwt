@@ -1,5 +1,5 @@
 server:
-  port: 1201
+  port: 8101
 
 spring:
   main:
@@ -39,10 +39,6 @@ eureka:
 
 
 management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"  # Expose all actuator endpoints, be cautious with this in production
   tracing:
     sampling:
       probability: 1.0

@@ -1,0 +1,9 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'service-registry'
+    metrics_path: '/actuator/prometheus'
+    eureka_sd_configs: 
+      - server: 'http://192.168.30.28:8145/eureka'
+    
